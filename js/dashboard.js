@@ -101,7 +101,7 @@ const Dashboard = {
       ? `<span class="status resolved"><span class="dot"></span>Resolved</span>`
       : `<span class="status ongoing"><span class="dot"></span>Ongoing</span>`;
     const alertPill = { Red: "pill-red", Yellow: "pill-yellow", Blue: "pill-blue" }[r.alertLevel] || "pill-blue";
-    const canEdit = r.resolved !== "Yes" && (this.session.role === "admin" || sameTownship(r.township, this.session.township));
+    const canEdit = r.resolved !== "Yes" && (Auth.canViewAllTownships() || sameTownship(r.township, this.session.township));
     const overdueBadge = (r.type === "initial" && r.resolved !== "Yes" && this.isOverdue(r))
       ? ` <span class="pill pill-orange" title="Open 12+ hours">⚠ 12h+</span>` : "";
 
@@ -144,7 +144,7 @@ const Dashboard = {
 
   checkOpenCaseReminder() {
     const open = this.reports.filter(r => r.resolved !== "Yes" &&
-      (this.session.role === "admin" || sameTownship(r.township, this.session.township)));
+      (Auth.canViewAllTownships() || sameTownship(r.township, this.session.township)));
     const hour = new Date().getHours();
     const banner = document.getElementById("openCaseBanner");
     if (!banner) return;

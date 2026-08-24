@@ -14,7 +14,15 @@ const Auth = {
   },
   isAdmin() {
     const s = this.getSession();
-    return s && s.role === "admin";
+    return s && String(s.role || "").trim().toLowerCase() === "admin";
+  },
+  // RSM: same cross-township read/edit access as Admin (History,
+  // Dashboard, editing any township's reports) but NOT the Admin page
+  // itself — account creation and Form Content editing stay admin-only.
+  canViewAllTownships() {
+    const s = this.getSession();
+    const role = s && String(s.role || "").trim().toLowerCase();
+    return role === "admin" || role === "rsm";
   },
   setSession(session) {
     localStorage.setItem(this.KEY, JSON.stringify(session));

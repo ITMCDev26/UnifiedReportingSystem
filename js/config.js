@@ -10,27 +10,27 @@
 
 const APP_CONFIG = {
   // Set this to your deployed Apps Script Web App URL (ends in /exec)
-  API_URL: "https://script.google.com/macros/s/AKfycbwwNUDVa5L9QwMS38yebVGkrxZQEMQaeei7lMKAb3DK38X2t0x_-REFZ2A4UhceP9TvIQ/exec",
+  API_URL: "https://script.google.com/macros/s/AKfycbwLmdDGMueOzL4EktSOf898K9wXgaHEyYA242KBmy4fE7Tw1NMtl3tlJt1K5ltaoQ3kUA/exec",
 
   orgName: "Unified Command Center",
 
   townships: [
-    { code: "ARCV", name: "Arcovia City Estate Association, Inc." },
-    { code: "BNCE", name: "Boracay New Coast Estate Association" },
-    { code: "CAPT", name: "Capital Town Association, Inc." },
-    { code: "CTLK", name: "Citylink Coach Services, Inc." },
-    { code: "DPDA", name: "Davao Park District Association, Inc." },
-    { code: "IBPA", name: "Iloilo Business Park Estate Association" },
+    { code: "ACEA", name: "Arcovia City Estate Association, Inc." },
+    { code: "BNC", name: "Boracay Newcoast Federation Inc." },
+    { code: "CTAI", name: "Capital Town Association Inc." },
+    { code: "CITYLINK", name: "Citylink Coach Services, Inc." },
+    { code: "DPD", name: "Davao Park District Association, Inc." },
+    { code: "IBPEA", name: "Iloilo Business Park Estate Association Inc." },
     { code: "MGEA", name: "Maple Grove Estate Association" },
-    { code: "MTCE", name: "Mckinley Town Center Estate Association" },
-    { code: "MKWE", name: "Mckinley West Estate Association" },
-    { code: "NPCE", name: "Newport City Estate Association" },
-    { code: "NHGE", name: "Northill Gateway Estate Association" },
-    { code: "SWCE", name: "Southwoods City Estate Association" },
-    { code: "MCTN", name: "The Mactan Newtown Estate Association" },
-    { code: "UPEA", name: "The Upper East Estate Association" },
-    { code: "UBEA", name: "Uptown Bonifacio Estate Association" },
-    { code: "WSCE", name: "Westside City Estate Association" }
+    { code: "MTCEA", name: "McKinley Town Center Estates Association, Inc." },
+    { code: "MWEA", name: "McKinley West Estate Association, Inc." },
+    { code: "NCEA", name: "Newport City Estates Association, Inc." },
+    { code: "NGEA", name: "Northill Gateway Estate Association" },
+    { code: "SCEA", name: "Southwoods City Estate Association Inc." },
+    { code: "TMNEA", name: "The Mactan Newtown Estate Association, Inc." },
+    { code: "TUEEA", name: "The Upper East Estate Association" },
+    { code: "UBEA", name: "Uptown Bonifacio Estate Association, Inc." },
+    { code: "WCEA", name: "Westside City Estate Association" }
   ],
 
   incidentTypes: [

@@ -14,18 +14,23 @@ const Admin = {
     try {
       this.users = await API.adminListUsers();
     } catch (e) { Toast.show(e.message, true); this.users = []; }
+    const roleLabels = { admin: "admin", rsm: "RSM", operator: "operator" };
+    const pillFor = (role) => {
+      const r = String(role || "").trim().toLowerCase();
+      return r === "admin" ? "pill-red" : r === "rsm" ? "pill-orange" : "pill-blue";
+    };
     const tbody = document.getElementById("usersBody");
     tbody.innerHTML = this.users.map(u => `
       <tr>
         <td>${escapeHtml(u.username)}</td>
         <td>${escapeHtml(u.fullName) || ""}</td>
         <td>${escapeHtml(u.township)}</td>
-        <td><span class="pill ${u.role === "admin" ? "pill-red" : "pill-blue"}">${escapeHtml(u.role)}</span></td>
+        <td><span class="pill ${pillFor(u.role)}">${escapeHtml(roleLabels[String(u.role || "").trim().toLowerCase()] || u.role)}</span></td>
         <td><button class="btn btn-ghost" style="padding:6px 10px;" onclick="Admin.editUserByUsername('${String(u.username).replace(/'/g, "\\'")}')">Edit</button></td>
       </tr>`).join("") || `<tr><td colspan="5" class="text-muted">No accounts yet.</td></tr>`;
 
     const twSelect = document.getElementById("u_township");
-    twSelect.innerHTML = '<option value="ALL">ALL (Admin)</option>' +
+    twSelect.innerHTML = '<option value="ALL">ALL (Admin / RSM)</option>' +
       APP_CONFIG.townships.map(t => `<option value="${t.name}">${escapeHtml(t.name)}</option>`).join("");
   },
 

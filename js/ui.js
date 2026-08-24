@@ -21,12 +21,19 @@ function escapeHtml(v) {
     .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
-// Mirrors the backend's sameTownship_ — a stray leading/trailing space or
-// a casing difference between a report's Township and an operator's own
-// account Township should never cause a mismatch (hiding a report that
-// should be editable, or a false negative in the 6PM open-case check).
+// Mirrors the backend's sameTownship_/canonicalTownship_ — tolerant of
+// stray spacing/casing, and treats a township CODE ("ARCV") as equal to
+// its full legal name, since the Users tab can be hand-edited with either.
 function sameTownship(a, b) {
-  return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
+  const canon = (v) => {
+    const s = String(v || "").trim().toLowerCase();
+    if (!s) return "";
+    const list = (typeof APP_CONFIG !== "undefined" && APP_CONFIG.townships) || [];
+    const byCode = list.find(t => String(t.code).toLowerCase() === s);
+    if (byCode) return byCode.name.toLowerCase();
+    return s;
+  };
+  return canon(a) === canon(b);
 }
 
 const Toast = {
@@ -73,7 +80,9 @@ const AppShell = {
     Auth.requireLogin();
     const session = Auth.getSession();
     const initials = (session.fullName || session.username || "?").slice(0, 2).toUpperCase();
-    const isAdmin = session.role === "admin";
+    const isAdmin = Auth.isAdmin();
+    const isRSM = !isAdmin && Auth.canViewAllTownships();
+    const roleLabel = isAdmin ? "Super Admin" : (isRSM ? "RSM — All Townships" : session.township);
 
     const navItems = [
       { key: "overview", href: "dashboard.html#overview", icon: "📊", label: "Overview" },
@@ -95,8 +104,8 @@ const AppShell = {
         <div class="sidebar-foot">
           <div class="user-chip">
             <div class="user-avatar">${initials}</div>
-            <div><div class="user-name">${session.fullName || session.username}</div>
-            <div class="user-role">${isAdmin ? "Super Admin" : session.township}</div></div>
+            <div><div class="user-name">${escapeHtml(session.fullName || session.username)}</div>
+            <div class="user-role">${roleLabel}</div></div>
           </div>
           <button class="btn btn-ghost" style="width:100%;margin-top:10px;" onclick="Auth.logout()">Log Out</button>
           <div class="sidebar-status"><span class="status-dot"></span>SYSTEM ONLINE</div>
