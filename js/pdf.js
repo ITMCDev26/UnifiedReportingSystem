@@ -11,7 +11,8 @@ const ReportPrint = {
   },
 
   townshipCode(name) {
-    const t = (APP_CONFIG.townships || []).find(t => t.name === name);
+    const list = (typeof AppShell !== "undefined" && AppShell.townships) || APP_CONFIG.townships || [];
+    const t = list.find(t => t.name === name);
     return t ? t.code : (name || "—");
   },
 

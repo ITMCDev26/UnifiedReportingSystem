@@ -28,7 +28,7 @@ function sameTownship(a, b) {
   const canon = (v) => {
     const s = String(v || "").trim().toLowerCase();
     if (!s) return "";
-    const list = (typeof APP_CONFIG !== "undefined" && APP_CONFIG.townships) || [];
+    const list = (typeof AppShell !== "undefined" && AppShell.townships) || (typeof APP_CONFIG !== "undefined" && APP_CONFIG.townships) || [];
     const byCode = list.find(t => String(t.code).toLowerCase() === s);
     if (byCode) return byCode.name.toLowerCase();
     return s;
@@ -76,8 +76,22 @@ const Modal = {
 /* Renders the shared app shell (sidebar + topbar + bottom tabs) into any
    authenticated page. Call AppShell.mount('history'|'new'|'admin'|'overview') */
 const AppShell = {
+  // Static fallback until the live fetch below resolves — every consumer
+  // (sameTownship, pdf.js's letterhead code lookup, the Users-account
+  // township dropdown) reads AppShell.townships instead of
+  // APP_CONFIG.townships directly, so once Admin edits townships in the
+  // Sheet, the whole app picks it up without a redeploy.
+  townships: APP_CONFIG.townships,
+
+  refreshTownships() {
+    return API.getConfig()
+      .then(cfg => { if (cfg && Array.isArray(cfg.townships) && cfg.townships.length) AppShell.townships = cfg.townships; })
+      .catch(() => {}); // offline/error: keep whatever we already have
+  },
+
   mount(active) {
     Auth.requireLogin();
+    this.refreshTownships(); // fire-and-forget; static fallback covers the gap
     const session = Auth.getSession();
     const initials = (session.fullName || session.username || "?").slice(0, 2).toUpperCase();
     const isAdmin = Auth.isAdmin();

@@ -384,6 +384,29 @@ table.report-table{width:100%;border-collapse:collapse;font-size:13.5px;}
   display:flex;align-items:center;gap:8px;
 }
 .form-section-title:first-child{margin-top:0;}
+
+/* ---------- admin: townships editor ---------- */
+.tw-header{
+  display:grid;grid-template-columns:130px 1fr 34px;gap:10px;padding:0 2px 8px;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:700;
+}
+.tw-row{
+  display:grid;grid-template-columns:130px 1fr 34px;gap:10px;align-items:center;margin-bottom:8px;
+}
+.tw-row .tw-remove{
+  width:34px;height:34px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--bg-input);color:var(--text-muted);display:flex;align-items:center;justify-content:center;
+  transition:color .15s ease, border-color .15s ease, transform .12s ease;
+}
+.tw-row .tw-remove:hover{color:var(--red);border-color:var(--red);transform:translateY(-1px);}
+.tw-actions{display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding-top:10px;border-top:1px solid var(--border);}
+@media (max-width:560px){
+  .tw-header{display:none;}
+  .tw-row{grid-template-columns:1fr 34px;grid-template-areas:"code remove" "name remove";}
+  .tw-row .tw-code{grid-area:code;}
+  .tw-row .tw-name{grid-area:name;margin-top:6px;}
+  .tw-row .tw-remove{grid-area:remove;align-self:start;}
+}
 .required-mark{color:var(--red);}
 .is-invalid-field{animation:invalidPulse .5s ease;}
 .is-invalid-field .form-control,.is-invalid-field .form-select,

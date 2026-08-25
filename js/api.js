@@ -49,6 +49,9 @@ const API = {
   adminUpdateConfig(configData) {
     return this._call("adminUpdateConfig", { configData });
   },
+  adminUpdateTownships(townships) {
+    return this._call("adminUpdateTownships", { townships });
+  },
   adminListUsers() {
     return this._call("adminListUsers", {});
   },
