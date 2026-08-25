@@ -10,7 +10,7 @@
 
 const APP_CONFIG = {
   // Set this to your deployed Apps Script Web App URL (ends in /exec)
-  API_URL: "https://script.google.com/macros/s/AKfycbxq2WTcNkx8jzPaA1rHzTxM1ahunojRB_0J4C3ohbg-V7ni9uhOvMmk7HWnBLQRXvymlg/exec",
+  API_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE",
 
   orgName: "Unified Command Center",
 
@@ -27,6 +27,7 @@ const APP_CONFIG = {
     { code: "NCEA", name: "Newport City Estates Association, Inc." },
     { code: "NGEA", name: "Northill Gateway Estate Association" },
     { code: "SCEA", name: "Southwoods City Estate Association Inc." },
+    { code: "TLC", name: "Twinlakes Corporation" },
     { code: "TMNEA", name: "The Mactan Newtown Estate Association, Inc." },
     { code: "TUEEA", name: "The Upper East Estate Association" },
     { code: "UBEA", name: "Uptown Bonifacio Estate Association, Inc." },
