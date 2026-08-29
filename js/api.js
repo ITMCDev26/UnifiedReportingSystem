@@ -1,64 +1,57 @@
-/* ============================================================
-   api.js — thin wrapper around the Google Apps Script Web App.
-   Every call is a POST with a text/plain body (JSON string).
-   Using text/plain avoids a CORS pre-flight request, which is
-   the standard trick for talking to Apps Script from a static
-   GitHub Pages site with no server in between.
-   ============================================================ */
+// ⚠️ REQUIRED: paste your deployed Apps Script Web App URL here.
+// Deploy > New deployment > Web app > Execute as Me / Access: Anyone.
+const API_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
 
-const API = {
-  async _call(action, payload) {
-    if (!APP_CONFIG.API_URL || APP_CONFIG.API_URL.includes("PASTE_YOUR")) {
-      throw new Error("API_URL is not configured yet — set it in js/config.js");
-    }
-    const res = await fetch(APP_CONFIG.API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ action, token: Auth.getToken(), ...payload })
-    });
-    if (!res.ok) throw new Error("Network error (" + res.status + ")");
-    const data = await res.json();
-    if (data.ok === false) throw new Error(data.error || "Request failed");
-    return data.result;
+const Session = {
+  get token() { return localStorage.getItem('ka_token') || ''; },
+  get role() { return localStorage.getItem('ka_role') || ''; },
+  get displayName() { return localStorage.getItem('ka_name') || ''; },
+  save(data) {
+    localStorage.setItem('ka_token', data.token || '');
+    localStorage.setItem('ka_role', data.role || '');
+    localStorage.setItem('ka_name', data.displayName || '');
   },
-
-  login(username, password) {
-    return this._call("login", { username, password });
+  clear() {
+    localStorage.removeItem('ka_token');
+    localStorage.removeItem('ka_role');
+    localStorage.removeItem('ka_name');
   },
-  getConfig() {
-    return this._call("getConfig", {});
-  },
-  listReports(filters) {
-    return this._call("listReports", { filters });
-  },
-  getReport(type, id) {
-    return this._call("getReport", { type, id });
-  },
-  createInitialReport(data) {
-    return this._call("createInitialReport", { data });
-  },
-  createProgressReport(data) {
-    return this._call("createProgressReport", { data });
-  },
-  createInformationReport(data) {
-    return this._call("createInformationReport", { data });
-  },
-  updateReport(type, id, data) {
-    return this._call("updateReport", { type, id, data });
-  },
-  adminUpdateConfig(configData) {
-    return this._call("adminUpdateConfig", { configData });
-  },
-  adminUpdateTownships(townships) {
-    return this._call("adminUpdateTownships", { townships });
-  },
-  adminListUsers() {
-    return this._call("adminListUsers", {});
-  },
-  adminUpsertUser(user) {
-    return this._call("adminUpsertUser", { user });
-  },
-  dashboardSummary() {
-    return this._call("dashboardSummary", {});
-  }
+  isLoggedIn() { return !!this.token; }
 };
+
+async function apiCall(action, payload) {
+  if (!API_URL || API_URL.indexOf('PASTE_YOUR') === 0) {
+    throw new Error('The API URL has not been configured yet. Open js/api.js and paste your Apps Script Web App URL.');
+  }
+  const body = Object.assign({ action, token: Session.token }, payload || {});
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    // text/plain avoids a CORS preflight against Apps Script web apps
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  if (!data.ok && data.error === 'Session expired. Please log in again.') {
+    Session.clear();
+    window.location.href = 'index.html';
+  }
+  return data;
+}
+
+function requireLogin(allowedRoles) {
+  if (!Session.isLoggedIn()) {
+    window.location.href = 'index.html';
+    return false;
+  }
+  if (allowedRoles && !allowedRoles.includes(Session.role)) {
+    window.location.href = Session.role === 'admin' ? 'admin.html' : 'judge.html';
+    return false;
+  }
+  return true;
+}
+
+function escapeHtml(str) {
+  return String(str == null ? '' : str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}

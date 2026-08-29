@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Judge Dashboard — KIDZ Assembly '26</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bunting" id="bunting"></div>
+<div class="topbar">
+  <div class="brand">
+    <div class="logo-badge">🌟</div>
+    <div class="brand-text">KIDZ ASSEMBLY <b>'26</b> — Judge Panel</div>
+  </div>
+  <div class="actions">
+    <span class="who" id="whoami"></span>
+    <button class="btn-outline btn-sm" id="logoutBtn">Log Out</button>
+  </div>
+</div>
+
+<div class="page">
+  <div id="catTabsWrap" class="card">
+    <div class="ribbon-badge blue">Choose a category to judge</div>
+    <div class="cat-tabs" id="catTabs"></div>
+  </div>
+
+  <div id="content"></div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/judge.js"></script>
+</body>
+</html>
