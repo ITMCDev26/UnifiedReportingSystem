@@ -1,71 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KIDZ Assembly '26 — Judge Login</title>
-<link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign In — Unified Command Center</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-<div class="bunting" id="bunting"></div>
-
-<div class="login-wrap">
-  <div class="login-card">
-    <div class="ribbon-badge gold">KIDZ ASSEMBLY '26</div>
-    <h1 class="display">CALLED TO<br><span class="go">GO ➔</span></h1>
-    <div class="verse">READY, SET, GO WITH JESUS! — MARK 16:15</div>
-
-    <form id="loginForm">
-      <div class="field" style="text-align:left">
-        <label for="username">Username</label>
-        <input id="username" autocomplete="username" required>
+  <div class="radar-bg" aria-hidden="true"></div>
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="brand-mark">UB</div>
+        <div>
+          <p class="login-title" style="margin:0;">Unified Command Center</p>
+        </div>
       </div>
-      <div class="field" style="text-align:left">
-        <label for="password">Password</label>
-        <input id="password" type="password" autocomplete="current-password" required>
-      </div>
-      <div id="msg"></div>
-      <button type="submit" class="btn-primary btn-block" id="loginBtn">Log In</button>
-    </form>
-    <div class="role-note">Judges &amp; admins use the same login screen — you'll be sent to the right dashboard automatically.</div>
+      <p class="login-sub">Sign in with your OPCEN credentials to file and track reports.</p>
+
+      <div class="login-error hidden" id="loginError"></div>
+
+      <form id="loginForm" autocomplete="off">
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required placeholder="e.g. ubea.opcen" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+      </form>
+
+      <p class="text-faint" style="font-size:11.5px;margin-top:18px;text-align:center;">
+        Accounts are managed by your Super Admin. Contact your OPCEN coordinator if you can't sign in.
+      </p>
+    </div>
   </div>
-</div>
 
-<script src="js/api.js"></script>
-<script>
-  // paint bunting flags
-  const bunting = document.getElementById('bunting');
-  for (let i = 0; i < 40; i++) bunting.appendChild(document.createElement('span'));
-
-  // if already logged in, skip straight to dashboard
-  if (Session.isLoggedIn()) {
-    window.location.href = Session.role === 'admin' ? 'admin.html' : 'judge.html';
-  }
-
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('loginBtn');
-    const msg = document.getElementById('msg');
-    msg.innerHTML = '';
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Logging in…';
-    try {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-      const data = await apiCall('login', { username, password });
-      if (!data.ok) {
-        msg.innerHTML = `<div class="error-msg">${escapeHtml(data.error || 'Login failed.')}</div>`;
-      } else {
-        Session.save(data);
-        window.location.href = data.role === 'admin' ? 'admin.html' : 'judge.html';
-      }
-    } catch (err) {
-      msg.innerHTML = `<div class="error-msg">${escapeHtml(err.message)}</div>`;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Log In';
-    }
-  });
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/theme.js"></script>
 </body>
 </html>
